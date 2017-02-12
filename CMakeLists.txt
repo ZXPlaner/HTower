@@ -4,6 +4,8 @@ project(HTower)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        README.md)
+        ht_main.cpp
+        HTower.cpp
+        HTower.h)
 
 add_executable(HTower ${SOURCE_FILES})
