@@ -3,7 +3,6 @@
 //
 
 #include "Trunk.h"
-#include "stdio.h"
 
 Trunk::Trunk(unsigned char height, bool isFull)
 {
@@ -35,8 +34,7 @@ void Trunk::push(unsigned char disk)
     this->disks[this->top++] = disk;
   else
   {
-    printf("cannot push. trunk is full\n");
-    // exeption "cannot push. trunk is full"
+    throw "cannot push. trunk is full\n";
   }
 }
 

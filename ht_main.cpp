@@ -14,23 +14,33 @@ static void moveTop(HTower *ht, T_trunkPos srcTrunk,
 
 int main()
 {
-  int srcTrunk, destTrunk, towerHeight, playType;
-  int retCode = 0;
+  int towerHeight;
 
   do
   {
     printf("Please, enter tower height (max 10)\r\n");
     scanf("%d", &towerHeight);
     if(towerHeight == 0 || towerHeight > 10)
-      printf("wrong stick size\r\n");
+      printf("wWong tower height\r\n");
   }
   while(towerHeight == 0 || towerHeight > 10);
 
-  HTower *h_tow = new HTower((unsigned char) towerHeight);
-  //h_tow->printImage();
-  moveTop(h_tow, tpLeft, tpRight, (unsigned char)towerHeight);
+  try
+  {
+    HTower *h_tow = new HTower((unsigned char) towerHeight);
+    moveTop(h_tow, tpLeft, tpRight, (unsigned char) towerHeight);
 
-  delete h_tow;
+    delete h_tow;
+  }
+  catch(const char *msg)
+  {
+    printf("%s", msg);
+  }
+  catch(int moves)
+  {
+    printf("You are Win in %d moves\n", moves);
+  }
+  return 0;
 }
 
 /*print return code string
@@ -53,7 +63,7 @@ static void moveTop(HTower *ht, T_trunkPos srcTrunk,
 
   if(trunkHeight > 1)
   {
-    moveTop(ht, srcTrunk, intermediateTrunk, (unsigned char)(trunkHeight - 1));
+    moveTop(ht, srcTrunk, intermediateTrunk, (unsigned char) (trunkHeight - 1));
   }
 
   ht->move(srcTrunk, destTrunk);
@@ -61,7 +71,7 @@ static void moveTop(HTower *ht, T_trunkPos srcTrunk,
 
   if(trunkHeight > 1)
   {
-    moveTop(ht, intermediateTrunk, destTrunk, (unsigned char)(trunkHeight - 1));
+    moveTop(ht, intermediateTrunk, destTrunk, (unsigned char) (trunkHeight - 1));
   }
 }
 

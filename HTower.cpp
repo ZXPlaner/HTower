@@ -6,7 +6,6 @@
  */
 
 #include "HTower.h"
-#include <stdio.h>
 //---------------------------------------------------------
 HTower::HTower(unsigned char height)
 {
@@ -64,21 +63,14 @@ void HTower::move(T_trunkPos srcTrunk, T_trunkPos destTrunk)
 	}
 	else
 	{
-    printf("Forbidden Move\n");
-		// exeption "forbidden move"
+    throw "Forbidden Move\n";
 	}
 
 	moves++;
 
 	if(pDestTrunk->isItFull())
   {
-    printf("You re WIN in %d moves\n", this->moves);
-    // exeption Win!
-  }
-  else
-  {
-    printf("Moving...\n");
-    // exeption move
+    throw this->moves;
   }
 
 }
