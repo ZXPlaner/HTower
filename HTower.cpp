@@ -6,131 +6,81 @@
  */
 
 #include "HTower.h"
-#include <string.h>
 #include <stdio.h>
 //---------------------------------------------------------
 HTower::HTower(unsigned char height)
 {
-  this->trunkHeight = height;
-  this->moves     = 0;
-
-	for(int i = 0; i < 3; i++)
-	{
-		this->p_trunk[i] = new unsigned char[height];
-
-		// set on first stick all disks
-		if(i == 0)
-		{
-			for(int j = 0; j < height; j++)
-			{
-				p_trunk[i][j] = height - j;
-			}
-		}
-		// other sticks are empty
-		else
-		{
-		  memset(p_trunk[i], 0, height);
-		}
-	}
-
+	this->leftTrunk    = new Trunk(height, true);
+	this->centralTrunk = new Trunk(height, false);
+	this->rightTrunk   = new Trunk(height, false);
+  this->moves        = 0;
 }
 //--------------------------------------------------------
 HTower::~HTower()
 {
-	for(int i = 0; i < 3; i++)
-	{
-		delete [] p_trunk[i];
-	}
+	delete this->leftTrunk;
+	delete this->centralTrunk;
+	delete this->rightTrunk;
 }
 //--------------------------------------------------------
-int HTower::move(unsigned char srcTrunk, unsigned char destTrunk)
+void HTower::move(T_trunkPos srcTrunk, T_trunkPos destTrunk)
 {
-	// check stick number
-	if(srcTrunk >= 3)
-		return HT_WRONG_SRC_NUM;
+	Trunk *pSrcTrunk;
+	Trunk *pDestTrunk;
 
-	if(destTrunk >= 3)
-			return HT_WRONG_DEST_NUM;
-
-	// check move possibility
-	if(getLastDiskSizeOnStick(srcTrunk) >= getLastDiskSizeOnStick(destTrunk))
+	switch(srcTrunk)
 	{
-		return HT_FORBDN_MOVE;
+	case tpLeft:
+		pSrcTrunk = this->leftTrunk;
+		break;
+	case tpCentral:
+		pSrcTrunk = this->centralTrunk;
+		break;
+	case tpRight:
+		pSrcTrunk = this->rightTrunk;
+		break;
+  default:
+    return;
 	}
-	setDiskOnStick(getLastDiskSizeOnStick(srcTrunk), destTrunk);
-	deleteLastDiskOnStick(srcTrunk);
+
+	switch(destTrunk)
+	{
+	case tpLeft:
+		pDestTrunk = this->leftTrunk;
+		break;
+	case tpCentral:
+		pDestTrunk = this->centralTrunk;
+		break;
+	case tpRight:
+		pDestTrunk = this->rightTrunk;
+		break;
+  default:
+    return;
+	}
+
+	if(pSrcTrunk->watch() < pDestTrunk->watch())
+	{
+		pDestTrunk->push(pSrcTrunk->pop());
+	}
+	else
+	{
+    printf("Forbidden Move\n");
+		// exeption "forbidden move"
+	}
+
 	moves++;
 
-	if(checkWinCond())
-	{
-		return moves;
-	}
-	else
-	{
-		return HT_RIGHT_MOVE;
-	}
-}
-//--------------------------------------------------------
-void HTower::printImage()
-{
-	for(int stick = 0; stick < 3; stick++)
-	{
-	  printf("******* ");
-	}
-	printf("\r\n");
-  for(int disk = (trunkHeight - 1); disk >= 0; disk--)
+	if(pDestTrunk->isItFull())
   {
-  	for(int stick = 0; stick < 3; stick++)
-  	{
-  		printf("--%03d-- ", p_trunk[stick][disk]);
-  	}
-  	printf("\r\n");
+    printf("You re WIN in %d moves\n", this->moves);
+    // exeption Win!
   }
-  for(int stick = 0; stick < 3; stick++)
+  else
   {
-  	printf("trunk_%d ", stick + 1);
+    printf("Moving...\n");
+    // exeption move
   }
-  printf("\r\n");
-}
-//--------------------------------------------------------
-unsigned char HTower::getLastDiskPosOnStick(unsigned char stick)
-{
-	unsigned char i = 0;
-
-	while(p_trunk[stick][i] != 0 && i < trunkHeight)
-	{
-		i++;
-	}
-	return i;
-}
-//--------------------------------------------------------
-unsigned char HTower::getLastDiskSizeOnStick(unsigned char stick)
-{
-	unsigned char pos = getLastDiskPosOnStick(stick);
-
-	if(pos == 0)
-		return 255;
-	else
-		return p_trunk[stick][pos - 1];
 
 }
 //--------------------------------------------------------
-void HTower::setDiskOnStick(unsigned char diskSize, unsigned char stick)
-{
-	p_trunk[stick][getLastDiskPosOnStick(stick)] = diskSize;
-}
-//--------------------------------------------------------
-void HTower::deleteLastDiskOnStick(unsigned char stick)
-{
-	unsigned char pos = getLastDiskPosOnStick(stick);
 
-	if(pos != 0)
-	  p_trunk[stick][pos - 1] = 0;
-}
-//--------------------------------------------------------
-bool HTower::checkWinCond()
-{
-  return (getLastDiskPosOnStick(2) == trunkHeight);
-
-}
-//--------------------------------------------------------
