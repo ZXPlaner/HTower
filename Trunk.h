@@ -5,21 +5,21 @@
 #ifndef HTOWER_TRUNK_H
 #define HTOWER_TRUNK_H
 
+#include <vector>
 
 class Trunk
 {
 public:
-  Trunk(unsigned char height, bool isFull);
-  virtual ~Trunk();
+  //Trunk();
+  //virtual ~Trunk();
   void push(unsigned char disk);
   unsigned char pop();
-  unsigned char watch();
-  bool isItFull();
+  unsigned char peek();
+  unsigned char size();
 
 private:
-  unsigned char *disks;
-  unsigned char height;
-  unsigned char top;
+  std::vector<unsigned char> disks;
+
 };
 
 

@@ -9,9 +9,15 @@
 //---------------------------------------------------------
 HTower::HTower(unsigned char height)
 {
-	this->leftTrunk    = new Trunk(height, true);
-	this->centralTrunk = new Trunk(height, false);
-	this->rightTrunk   = new Trunk(height, false);
+	this->leftTrunk    = new Trunk();
+	this->centralTrunk = new Trunk();
+	this->rightTrunk   = new Trunk();
+
+  for(unsigned char i = height; i >0; i--)
+  {
+    this->leftTrunk->push(i);
+  }
+
   this->moves        = 0;
 }
 //--------------------------------------------------------
@@ -57,7 +63,7 @@ void HTower::move(T_trunkPos srcTrunk, T_trunkPos destTrunk)
     return;
 	}
 
-	if(pSrcTrunk->watch() < pDestTrunk->watch())
+	if(pSrcTrunk->peek() < pDestTrunk->peek())
 	{
 		pDestTrunk->push(pSrcTrunk->pop());
 	}
@@ -68,7 +74,9 @@ void HTower::move(T_trunkPos srcTrunk, T_trunkPos destTrunk)
 
 	moves++;
 
-	if(pDestTrunk->isItFull())
+	if(!this->leftTrunk->size() &&
+     !this->centralTrunk->size() &&
+     this->rightTrunk->size())
   {
     throw this->moves;
   }
