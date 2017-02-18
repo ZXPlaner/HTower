@@ -29,7 +29,6 @@ private:
 	Trunk *leftTrunk;
 	Trunk *centralTrunk;
 	Trunk *rightTrunk;
-	int    moves;
 };
 
 #endif /* HTOWER_H_ */

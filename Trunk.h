@@ -10,12 +10,8 @@
 class Trunk
 {
 public:
-  //Trunk();
-  //virtual ~Trunk();
-  void push(unsigned char disk);
+  void          push(unsigned char disk);
   unsigned char pop();
-  unsigned char peek();
-  unsigned char size();
 
 private:
   std::vector<unsigned char> disks;

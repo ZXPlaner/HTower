@@ -17,8 +17,6 @@ HTower::HTower(unsigned char height)
   {
     this->leftTrunk->push(i);
   }
-
-  this->moves        = 0;
 }
 //--------------------------------------------------------
 HTower::~HTower()
@@ -63,23 +61,7 @@ void HTower::move(T_trunkPos srcTrunk, T_trunkPos destTrunk)
     return;
 	}
 
-	if(pSrcTrunk->peek() < pDestTrunk->peek())
-	{
-		pDestTrunk->push(pSrcTrunk->pop());
-	}
-	else
-	{
-    throw "Forbidden Move\n";
-	}
-
-	moves++;
-
-	if(!this->leftTrunk->size() &&
-     !this->centralTrunk->size() &&
-     this->rightTrunk->size())
-  {
-    throw this->moves;
-  }
+  pDestTrunk->push(pSrcTrunk->pop());
 
 }
 //--------------------------------------------------------

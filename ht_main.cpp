@@ -9,12 +9,13 @@
 #include <stdio.h>
 
 
-static void moveTop(HTower *ht, T_trunkPos srcTrunk,
+static int moveTop(HTower *ht, T_trunkPos srcTrunk,
                     T_trunkPos destTrunk, unsigned char trunkHeight);
 
 int main()
 {
   int towerHeight;
+  int moves;
 
   do
   {
@@ -28,29 +29,24 @@ int main()
   try
   {
     HTower *h_tow = new HTower((unsigned char) towerHeight);
-    moveTop(h_tow, tpLeft, tpRight, (unsigned char) towerHeight);
-
+    moves = moveTop(h_tow, tpLeft, tpRight, (unsigned char) towerHeight);
+    printf("You are Win in %d moves\n", moves);
     delete h_tow;
   }
   catch(const char *msg)
   {
     printf("%s", msg);
   }
-  catch(int moves)
-  {
-    printf("You are Win in %d moves\n", moves);
-  }
+
   return 0;
 }
 
-/*print return code string
- *
- */
 
-
-static void moveTop(HTower *ht, T_trunkPos srcTrunk,
+static int moveTop(HTower *ht, T_trunkPos srcTrunk,
                     T_trunkPos destTrunk, unsigned char trunkHeight)
 {
+  static int moves = 0;
+
   T_trunkPos intermediateTrunk = tpLeft;
 
   if(destTrunk == tpLeft || srcTrunk == tpLeft)
@@ -68,10 +64,11 @@ static void moveTop(HTower *ht, T_trunkPos srcTrunk,
 
   ht->move(srcTrunk, destTrunk);
 
-
   if(trunkHeight > 1)
   {
     moveTop(ht, intermediateTrunk, destTrunk, (unsigned char) (trunkHeight - 1));
   }
-}
 
+  moves++;
+  return moves;
+}
